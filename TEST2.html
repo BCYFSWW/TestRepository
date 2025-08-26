@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<style>
+			.triangle {
+			    width: 50px;
+			    height: 0px;
+			    border-top: 100px solid skyblue;
+			    border-right: 100px solid transparent;
+			    border-left: 100px solid transparent;
+				/* border-bottom: 50px solid skyblue; */
+			}
+			.circle {
+				width: 200px;
+				height: 200px;
+				background: skyblue;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+			table, table * {
+				border: 1px solid #000;
+			}
+			table th, table td {
+				border: 1px solid #000;
+			}
+			table {
+				border-collapse: collapse;
+				border-spacing: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="circle"></div>
+		<!-- INSERT_YOUR_CODE -->
+		<table border="1" cellpadding="8" style="margin-top:20px;">
+			<caption style="font-size:18px;font-weight:bold;">人物基础信息表</caption>
+			<thead>
+				<tr>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>年龄</th>
+					<th>职业</th>
+					<th>联系方式</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>张三</td>
+					<td>男</td>
+					<td>28</td>
+					<td>工程师</td>
+					<td>13800000001</td>
+				</tr>
+				<tr>
+					<td>李四</td>
+					<td>女</td>
+					<td>25</td>
+					<td>设计师</td>
+					<td>13800000002</td>
+				</tr>
+				<tr>
+					<td>王五</td>
+					<td>男</td>
+					<td>32</td>
+					<td>产品经理</td>
+					<td>13800000003</td>
+				</tr>
+			</tbody>
+		</table>
+		<script>
+			const circle = document.querySelector('.circle');
+			circle.addEventListener('click', () => {
+				circle.style.backgroundColor = 'red';
+			});
+		</script>
+	</body>
+</html>

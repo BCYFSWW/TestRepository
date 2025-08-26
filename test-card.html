@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<style>
+			#bg {
+				width: 650px;
+				height: 600px;
+				margin: 0 auto;
+				background: url('https://i-blog.csdnimg.cn/blog_migrate/efff1b5ae48d956f5c9aca744c454c43.jpeg#pic_center') no-repeat;
+				position: relative;
+			}
+
+			.pointer {
+				position: absolute;
+				z-index: 10;
+				top: 155px;
+				left: 247px;
+			}
+
+			.turntable {
+				position: absolute;
+				z-index: 5;
+				top: 60px;
+				left: 116px;
+				transition: all 4s;
+				/*动画执行时间为4s */
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="bg">
+			<img onclick="getNumber()" class="pointer"
+				src="https://i-blog.csdnimg.cn/blog_migrate/820cc7fb9c708890d71810338d2cbb6d.png#pic_center"
+				alt="pointer">
+			<img ref="turntable" class="turntable"
+				src="https://i-blog.csdnimg.cn/blog_migrate/5f7fd808d0595ac39f1e07bc6284d42f.png#pic_center"
+				alt="turntable">
+			<h1 id="testH1"></h1>
+		</div>
+		<script>
+			var isGo = false; //是否正在执行动画
+			var oTurntable = document.getElementsByClassName("turntable")[0]; //执行动画的对象
+			var randomDeg = 0; //即将旋转的度数   
+			var lastDeg = 0; //上一次旋转的度数
+			var goTimes = 5; //抽奖次数
+			var testArr = ["免单4999元","免单50元","免单10元","免单5元","免分期服务费","提高白条额度","未中奖"]
+			document.getElementById("testH1").innerHTML = "你的抽奖次数为: " + goTimes;
+			var getRandom = function(n, m) { //该方法能产生[n,m]之间随机数
+				let result = Math.floor(Math.floor(Math.random() * (m - n + 1) + n))
+				return result;
+			};
+			var getNumber = function() {
+				if (isGo) {
+					return;
+				} else {
+					if (goTimes <= 0) {
+						return alert('抱歉您的抽奖次数用完了');
+					}
+				}
+				//   调整中奖概率(让每次旋转前指针都在初始位置，这样才准确)
+				//   想转到第一项，需要转：360/7*0 + 360/7/2;   --->该项为超级大奖奖项
+				//   想转到第二项，需要转：360/7*1 + 360/7/2;
+				//   想转到第三项，需要转：360/7*2 + 360/7/2;
+				//   想转到第四项，需要转：360/7*3 + 360/7/2;
+				//   想转到第五项，需要转：360/7*4 + 360/7/2;
+				//   想转到第六项，需要转：360/7*5 + 360/7/2;
+				//   想转到第七项，需要转：360/7*6 + 360/7/2;   --->该项为未中奖项
+				let number = getRandom(0, 100)
+				let caseNum = ''
+				if (number === 0) {
+					caseNum = 0 //粗略概率为1%
+				} else if (number > 0 && number < 5) {
+					caseNum = 1 //粗略概率为5%
+				} else if (number >= 5 && number < 10) {
+					caseNum = 2 //粗略概率为5%
+				} else if (number >= 10 && number < 15) {
+					caseNum = 3 //粗略概率为5%
+				} else if (number >= 15 && number < 20) {
+					caseNum = 4 //粗略概率为5%
+				} else if (number >= 20 && number < 25) {
+					caseNum = 5 //粗略概率为5%
+				} else {
+					caseNum = 6 //粗略概率为75%
+				}
+				ratating(360 / 7 * caseNum + 360 / 7 / 2, testArr[caseNum]);
+			};
+			var ratating = function(deg, text) {
+				goTimes--;
+				document.getElementById("testH1").innerHTML = "你的抽奖次数为: " + goTimes;
+				isGo = true;
+				let times = getRandom(3, 6) //圈数(从用户体验角度考虑，设计随机转3-6圈。最少3圈，最多6圈)
+
+				randomDeg = deg + 360 * times //记录这次要旋转的度数(传来的度数+圈数)
+				let realDeg = (360 - lastDeg % 360) + lastDeg + randomDeg
+				/*上次指针离初始状态的度数 + 上次的度数 + 这次要旋转的度数
+				(这样的目的是为了每次旋转都从原点开始，保证数据准确)*/
+				oTurntable.style.transform = `rotate(${realDeg}deg)`;
+				// oTurntable.setAttribute("transform",`rotate(${realDeg}deg)`)
+				setTimeout(() => {
+					isGo = false
+					console.log(`以原点共旋转了${randomDeg}度,以一圈为相对旋转了${randomDeg % 360}度,最终结果为${text}`)
+					lastDeg = realDeg //把这次度数存储起来，方便下一次获取
+				}, 4000) //4000ms为css里面写的执行动画的时间
+			};
+
+
+
+
+
+
+
+
+
+
+
+
+
+			/* var oldobj = {
+				id: 1,
+				name: 'andy',
+				msg: {
+					age: 18
+				}
+			};
+			var copy = Object.assign({}, oldobj);
+			// console.log(copy)
+			var copy1 = {
+				...oldobj
+			} */
+			// console.log(copy1)
+
+			/* function deepCopy(newobj, oldobj) {
+				for (var k in oldobj) {
+					// 判断我们的属性值属于那种数据类型
+					// 1. 获取属性值  oldobj[k]
+					var item = oldobj[k];
+					// 2. 判断这个值是否是数组(首先判断数组是因为数组也属于对象)
+					if (item instanceof Array) {
+						newobj[k] = [];
+						deepCopy(newobj[k], item);
+					} else if (item instanceof Object) {
+						// 3. 判断这个值是否是对象
+						newobj[k] = {};
+						deepCopy(newobj[k], item);
+					} else {
+						// 4. 属于简单数据类型
+						newobj[k] = item;
+					}
+				}
+			} */
+			;
+			// var copy3 = {}
+			// deepCopy(copy3, oldobj);
+			// var test = (function() {
+			//   var num = 0
+			//   return () => {
+			//       return num++
+			//   }
+			// }())
+			// for (var i = 0; i < 20; i++) {
+			//   test()
+			// }
+			// console.log(test());
+			//debounce()函数进入页面立即执行
+			// debounce()必须返回函数因为事件只能调用函数
+			// function debounce(callback, time) {
+			// 	let t;
+			// 	return function() { //返回的是一个逻辑，处理防抖
+			// 		clearTimeout(t); //在500毫秒这个时间段内又滚动了一次就要把上一次的定时器清除
+			// 		t = setTimeout(callback, time);
+			// 	}
+			// }
+			/* function debounce(func, wait) {
+				let timeout;
+				return function() {
+					let context = this; // 保存this指向
+					let args = arguments; // 拿到event对象
+					clearTimeout(timeout)
+					timeout = setTimeout(function() {
+						func.apply(context, args)
+					}, wait);
+				}
+			} */
+			// function debounce(fuc, wait) {
+			// 	let timeout;
+			// 	return function(...args) {
+			// 		const that = this;
+			// 		clearTimeout(timeout);
+			// 		timeout = setTimeout(() => {
+			// 			fuc.apply(that, args);
+			// 		}, wait)
+			// 	}
+			// }
+			// function throttled1(fn, delay) {
+			//     let oldtime = Date.now()
+			//     return function (...args) {
+			//         let newtime = Date.now()
+			//         if (newtime - oldtime >= delay) {
+			//             fn.apply(null, args)
+			//             oldtime = Date.now()
+			//         }
+			//     }
+			// }
+			// var test = function() { //监听滚动条
+			// 	console.log("调用了一次");
+			// }
+			// document.getElementById("btn").onclick=debounce(test, 1000);
+			// 绑定滚动条事件
+			// window.onscroll = throttled1(test, 1000);
+		</script>
+	</body>
+
+</html>
